@@ -44,12 +44,13 @@ export default function setupServer() {
             const { contactId } = req.params;
             const contact = await getContactById(contactId);
 
-        // console.log(contact);
-        //     if (contact === null) {
-        //          res.status(404).json({
-        //             message: 'Contact not found'
-        //         });
-        //     }
+
+        	if (contact === null) {
+	  	  res.status(404).json({
+		  message: 'Contact not found'
+              });
+                return;
+	}
 
         res.status(200).json({
             status: 200,
@@ -57,15 +58,31 @@ export default function setupServer() {
             data: contact,
         });
 
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
-            res.status(404).json({
-                    message: 'Contact not found'
+            res.status(500).json({
+                    message: 'Internal Server error'
                 });
         };
 
     });
+
+    // app.get('/contacts/:contactId', async (req, res) => {
+    //     const { contactId } = req.params;
+    //     const contact = await getContactById(contactId);
+
+    //     	if (!contact) {
+	//   return res.status(404).json({
+	// 	  message: 'Contact not found'
+	//   });
+	//   return;
+	// }
+
+    //     res.status(200).send({
+    //         data: contact
+    //     });
+
+    // });
 
 
 
