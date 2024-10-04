@@ -20,10 +20,10 @@ const router = Router();
 
     router.post('/contacts', validateBody(createContactShema), ctrlWrapper(createContactController));
 
-    router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
+    router.delete('/contacts/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
     // router.put('/contacts/:contactId', ctrlWrapper(upsertContactController));
 
-    router.patch('/contacts/:contactId', validateBody(updateContactSchema), ctrlWrapper(patchContactController));
+    router.patch('/contacts/:contactId', isValidId, validateBody(updateContactSchema), ctrlWrapper(patchContactController));
 
 export default router;
