@@ -8,22 +8,63 @@ import {
 } from "../controllers/contacts.js";
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 import { validateBody } from "../middlewares/validateBody.js";
-import { createContactShema, updateContactSchema } from "../validation/contact.js";
+import {
+    createContactShema,
+    updateContactSchema
+} from "../validation/contact.js";
 import { isValidId } from "../middlewares/isValidId.js";
+import { authenticate } from "../middlewares/authenticate.js";
+import { checkRoles } from "../middlewares/checkRoles.js";
+import { ROLES } from "../constants/index.js";
 
 
 const router = Router();
 
-    router.get('/contacts', ctrlWrapper(getAllContactsController));
 
-    router.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.use(authenticate);
 
-    router.post('/contacts', validateBody(createContactShema), ctrlWrapper(createContactController));
+router.get(
+    '/',
+    checkRoles(ROLES.ADMIN),
+    ctrlWrapper(getAllContactsController));
 
-    router.delete('/contacts/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.get(
+    '/:contactId',
+    checkRoles(ROLES.ADMIN, ROLES.USER),
+    isValidId,
+    ctrlWrapper(getContactByIdController)
+);
+
+router.post('/register',
+    validateBody(createContactShema),
+    ctrlWrapper(createContactController),
+);
+
+router.post(
+    '/',
+    checkRoles(ROLES.ADMIN, ROLES.USER),
+    validateBody(createContactShema),
+    ctrlWrapper(createContactController)
+);
+
+router.delete(
+    '/:contactId',
+    checkRoles(ROLES.ADMIN),
+    isValidId,
+    ctrlWrapper(deleteContactController)
+);
+
 
     // router.put('/contacts/:contactId', ctrlWrapper(upsertContactController));
 
-    router.patch('/contacts/:contactId', isValidId, validateBody(updateContactSchema), ctrlWrapper(patchContactController));
+router.patch(
+    '/:contactId',
+    checkRoles(ROLES.ADMIN, ROLES.USER),
+    isValidId,
+    validateBody(updateContactSchema),
+    ctrlWrapper(patchContactController)
+);
+
+
 
 export default router;
