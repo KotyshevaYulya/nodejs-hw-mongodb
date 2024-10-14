@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 import { SORT_ORDER } from "../constants/index.js";
 
-export const getAllContacts = async ({
+export const  getAllContacts = async ({
     page = 1,
     perPage = 10,
     sortOrder = SORT_ORDER.ASC,
@@ -24,6 +24,8 @@ export const getAllContacts = async ({
         contactsQuery.where('contactType').equals(filter.contactType);
     }
 
+    contactsQuery.where('parentId').equals(filter.parentId);
+     
     // const contactsCount = await ContactsColection.find()
     //     .merge(contactsQuery)
     //     .countDocuments();
@@ -61,6 +63,7 @@ export const createContact = async (payload) => {
     const contact = await ContactsColection.create(payload);
     return contact;
 };
+
 
 export const deleteContact = async (contactId) => {
     const contact = await ContactsColection.findOneAndDelete({

@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 const contactsSchema = new Schema(
     {
@@ -22,7 +22,10 @@ const contactsSchema = new Schema(
             enum: ['work', 'home', 'personal'],
             required: true,
         },
-       parentId: { type: Schema.Types.ObjectId, ref: 'users' },
+        parentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+        },
     },
     {
         timestamps: true,
