@@ -18,7 +18,7 @@ export const getAllContactsController = async (req, res, next) => {
         const { sortBy, sortOrder } = parseSortParams(req.query);
         const filter = parseFilterParams(req.query);
 
-        filter.parentId = req.user._id; 
+        filter.userId = req.user._id;
 
         const contacts = await getAllContacts({
             page,
@@ -40,8 +40,8 @@ export const getAllContactsController = async (req, res, next) => {
 
 export const getContactByIdController = async (req, res, next) => {
     try {
-        const { contactId } = req.params;
-        const contact = await getContactById(contactId);
+        const { contactId, userId } = req.params;
+        const contact = await getContactById(contactId, userId);
 
         if (contact === null) {
             throw createHttpError(404, 'Contact not found');
@@ -67,7 +67,7 @@ export const createContactController = async (req, res) => {
         email: req.body.email,
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
-        parentId: req.user._id,
+        userId: req.user._id,
     });
 
     res.status(201).json({
@@ -79,9 +79,9 @@ export const createContactController = async (req, res) => {
 
 
 export const deleteContactController = async (req, res, next) => {
-    const { contactId } = req.params;
+    const { contactId, userId } = req.params;
 
-    const contact = await deleteContact(contactId);
+    const contact = await deleteContact(contactId, userId);
 
     if (!contact) {
         next(createHttpError(404, 'Student not found'));
@@ -93,9 +93,9 @@ export const deleteContactController = async (req, res, next) => {
 
 
 export const patchContactController = async (req, res) => {
-    const { contactId } = req.params;
+    const { contactId, userId } = req.params;
     const { body } = req;
-    const contact = await updateContact(contactId, body);
+    const contact = await updateContact(contactId, userId, body);
 
     if (contact === null) {
         throw createHttpError(404, 'Contact not found');

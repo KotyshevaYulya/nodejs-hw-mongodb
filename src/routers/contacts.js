@@ -17,6 +17,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 
 
 
+
 const router = Router();
 
 
@@ -26,8 +27,14 @@ router.get(
     '/',
     ctrlWrapper(getAllContactsController));
 
+// router.get(
+//     '/:contactId',
+//     isValidId,
+//     ctrlWrapper(getContactByIdController)
+// );
+
 router.get(
-    '/:contactId',
+    '/:contactId/:userId',
     isValidId,
     ctrlWrapper(getContactByIdController)
 );
@@ -44,7 +51,7 @@ router.post(
 );
 
 router.delete(
-    '/:contactId',
+    '/:contactId/:userId',
     isValidId,
     ctrlWrapper(deleteContactController)
 );
@@ -53,7 +60,7 @@ router.delete(
     // router.put('/contacts/:contactId', ctrlWrapper(upsertContactController));
 
 router.patch(
-    '/:contactId',
+    '/:contactId/:userId',
     isValidId,
     validateBody(updateContactSchema),
     ctrlWrapper(patchContactController)

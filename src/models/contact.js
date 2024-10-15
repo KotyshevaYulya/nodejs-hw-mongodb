@@ -22,7 +22,7 @@ const contactsSchema = new Schema(
             enum: ['work', 'home', 'personal'],
             required: true,
         },
-        parentId: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
         },
