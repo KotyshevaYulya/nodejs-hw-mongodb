@@ -9,6 +9,10 @@ import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import createHttpError from "http-errors";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { parseFilterParams } from "../utils/parseFilterParams.js";
+import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
+import { env } from "../utils/env.js";
+import { CLOUDINARY } from "../constants/index.js";
 
 
 export const getAllContactsController = async (req, res, next) => {
@@ -95,23 +99,68 @@ export const deleteContactController = async (req, res, next) => {
 };
 
 
-export const patchContactController = async (req, res) => {
+// export const patchContactController = async (req, res) => {
+//     const { contactId } = req.params;
+//     const { _id } = req.user;
+//     const photo = req.file;
+
+//     let photoUrl;
+
+//     if (photo) {
+//         if (env('ENABLE_CLOUDINARY') === 'true') {
+//             photoUrl = await saveFileToCloudinary(photo);
+//         } else {
+//             photoUrl = await saveFileToUploadDir(photo);
+//         }
+//     }
+
+//     const { body } = req;
+//     //! const contact = await updateContact(contactId, _id, body);
+//     const contact = await updateContact(contactId, _id, {
+//         ...body,
+//         photo: photoUrl,
+//     });
+
+//     if (contact === null) {
+//         throw createHttpError(404, 'Contact not found');
+//     };
+
+
+//     res.send({
+//         status: 200,
+//         massage: 'Successfully patched a contact!',
+//         data: contact,
+//     })
+// };
+
+export const patchContactController = async (req, res, next) => {
     const { contactId } = req.params;
     const { _id } = req.user;
+    const photo = req.file;
 
-    const { body } = req;
-    const contact = await updateContact(contactId, _id, body);
+    let photoUrl;
 
-    if (contact === null) {
-        throw createHttpError(404, 'Contact not found');
-    };
+    if (photo) {
+        if (env(CLOUDINARY.ENABLE_CLOUDINARY ) === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
+    }
 
+    const result = await updateContact(contactId, _id, {
+        ...req.body,
+        photo: photoUrl,
+    });
 
-    res.send({
+    if (!result) {
+        next(createHttpError(404, 'Contact not found'));
+        return;
+    }
+
+    res.json({
         status: 200,
-        massage: 'Successfully patched a contact!',
-        data: contact,
-    })
+        message: 'Saccessfully patched a contact!',
+        data: result,
+    });
 };
-
-

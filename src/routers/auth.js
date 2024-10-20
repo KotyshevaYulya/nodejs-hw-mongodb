@@ -6,6 +6,8 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { loginUserSchema } from '../validation/auth.js';
 import { loginUserController } from '../controllers/auth.js';
 import { refreshUserSessionController } from '../controllers/auth.js';
+import { resetPasswordSchema } from '../validation/auth.js';
+import { resetPasswordController } from '../controllers/auth.js';
 
 const authrouter = Router();
 
@@ -36,6 +38,10 @@ authrouter.post(
     ctrlWrapper(requestResetEmailCotroller),
 );
 
-authrouter.post('/reset-password');
+authrouter.post(
+    '/reset-password',
+    validateBody(resetPasswordSchema),
+    ctrlWrapper(resetPasswordController),
+);
 
 export default authrouter;
