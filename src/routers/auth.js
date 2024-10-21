@@ -39,7 +39,7 @@ authrouter.post(
 );
 
 authrouter.post(
-    '/reset-password',
+    '/reset-pwd',
     validateBody(resetPasswordSchema),
     ctrlWrapper(resetPasswordController),
 );
