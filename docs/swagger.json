@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "https://prnt.sc/bphqt73V5bxX"
+      "url": "https://nodejs-hw-mongodb-8-ii7v.onrender.com"
     }
   ],
   "tags": [
@@ -361,7 +361,7 @@
                   "photo": {
                     "description": "Link to Contact's photo",
                     "type": "string",
-                    "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
+                    "format": "binary"
                   }
                 }
               }
